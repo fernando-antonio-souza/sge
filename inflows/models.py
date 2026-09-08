@@ -5,7 +5,7 @@ from suppliers.models import Supplier
 
 class Inflow(models.Model):
     '''
-    Realiza a entrada do produto no sistema.
+    Registra a entrada do produto no sistema.
 
     Cadastra o fornecedor, o produto, a quantidade, descrição, data de criação e data de atualização do registro.
     '''
