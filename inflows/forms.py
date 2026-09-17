@@ -16,6 +16,6 @@ class InflowForm(forms.ModelForm):
         labels = {
             "supplier": "Fornecedor",
             "product": "Produto",
-            "quantity": "Qauntidade",
+            "quantity": "Quantidade",
             "description": "Descrição",
         }
