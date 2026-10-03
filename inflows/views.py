@@ -1,5 +1,3 @@
-
-from django import forms
 from rest_framework import generics
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
@@ -14,13 +12,12 @@ class InflowListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     paginate_by = 10
     permission_required = "inflows.view_inflow"
 
-
     def get_queryset(self):
-        queryset =  super().get_queryset()
+        queryset = super().get_queryset()
         product = self.request.GET.get("product")
 
         if product:
-            queryset = queryset.filter(product__icontains= product)
+            queryset = queryset.filter(product__icontains=product)
 
         return queryset
 
@@ -39,7 +36,6 @@ class InflowDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     permission_required = "inflows.view_inflow"
 
 
-
 class InflowCreateListAPIView(generics.ListCreateAPIView):
     queryset = models.Inflow.objects.all()
     serializer_class = serializers.InflowSerializer
@@ -48,7 +44,3 @@ class InflowCreateListAPIView(generics.ListCreateAPIView):
 class InflowRetrieveAPIView(generics.RetrieveAPIView):
     queryset = models.Inflow.objects.all()
     serializer_class = serializers.InflowSerializer
-
-
-
-

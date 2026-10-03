@@ -3,7 +3,10 @@ from . import models
 
 
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ("name", "description",)
+    list_display = (
+        "name",
+        "description",
+    )
     search_fields = ("name",)
 
 

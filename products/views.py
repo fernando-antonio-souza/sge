@@ -1,8 +1,13 @@
-from django import forms
 from rest_framework import generics
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    DetailView,
+    UpdateView,
+    DeleteView,
+)
 from . import models, forms, serializers
 from app import metrics
 from categories.models import Category
@@ -16,13 +21,12 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     paginate_by = 10
     permission_required = "products.view_product"
 
-
     def get_queryset(self):
-        queryset =  super().get_queryset()
+        queryset = super().get_queryset()
         title = self.request.GET.get("title")
         serie_number = self.request.GET.get("serie_number")
-        category = self.request.GET.get('category')
-        brand = self.request.GET.get('brand')
+        category = self.request.GET.get("category")
+        brand = self.request.GET.get("brand")
 
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -73,7 +77,6 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     permission_required = "products.delete_product"
 
 
-
 class ProductCreateListAPIView(generics.ListCreateAPIView):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
@@ -82,4 +85,3 @@ class ProductCreateListAPIView(generics.ListCreateAPIView):
 class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
-

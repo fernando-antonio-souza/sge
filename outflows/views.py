@@ -1,5 +1,4 @@
 from app import metrics
-from django import forms
 from rest_framework import generics
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
@@ -14,13 +13,12 @@ class OutflowListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     paginate_by = 10
     permission_required = "outflows.view_outflow"
 
-
     def get_queryset(self):
-        queryset =  super().get_queryset()
+        queryset = super().get_queryset()
         product = self.request.GET.get("product")
 
         if product:
-            queryset = queryset.filter(product__icontains= product)
+            queryset = queryset.filter(product__icontains=product)
 
         return queryset
 
@@ -30,7 +28,6 @@ class OutflowListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return context
 
 
-
 class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     mode = models.Outflow
     template_name = "outflow_create.html"
@@ -38,11 +35,11 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
     success_url = reverse_lazy("outflow_list")
     permission_required = "outflows.add_outflow"
 
+
 class OutflowDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = models.Outflow
     template_name = "outflow_detail.html"
     permission_required = "outflows.view_outflow"
-
 
 
 class OutflowCreateListAPIView(generics.ListCreateAPIView):
@@ -53,8 +50,3 @@ class OutflowCreateListAPIView(generics.ListCreateAPIView):
 class OutflowRetrieveAPIView(generics.RetrieveAPIView):
     queryset = models.Outflow.objects.all()
     serializer_class = serializers.OutflowSerializer
-
-
-
-
-

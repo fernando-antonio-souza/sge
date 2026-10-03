@@ -2,8 +2,7 @@ from django.apps import AppConfig
 
 
 class InflowsConfig(AppConfig):
-    name = 'inflows'
-
+    name = "inflows"
 
     def ready(self):
-        import inflows.signals
+        import inflows.signals  # noqa: F401
