@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,6 +51,7 @@ INSTALLED_APPS = [
     "products",
     "inflows",
     "outflows",
+    "ai",
 ]
 
 LOGIN_URL = "login"
@@ -88,7 +93,7 @@ WSGI_APPLICATION = "app.wsgi.application"
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "dev": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "sge",
         "USER": "postgres",
@@ -97,7 +102,7 @@ DATABASES = {
         "PORT": "5432",
     },
 
-    "dev": {
+    "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
@@ -165,3 +170,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
+
+
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
