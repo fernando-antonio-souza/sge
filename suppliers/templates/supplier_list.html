@@ -7,14 +7,16 @@ SGE - Fornecedores
 
 {% block content %}
 
+<h1 class="sge-page-title">Fornecedores</h1>
+
 <div class="row mb-3">
 
     <div class="col-md-6">
-        <form method="get" action="{% url 'supplier_list' %}">
+        <form method="get" action="{% url 'supplier_list' %}" role="search">
             <div class="input-group">
-                <input type="text" class="form-control" name="name" placeholder="Nome" value="{{ request.GET.name }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i>
+                <input type="text" class="form-control" name="name" placeholder="Ex.: Acme…" aria-label="Buscar por nome" value="{{ request.GET.name }}">
+                <button type="submit" class="btn btn-primary" aria-label="Buscar">
+                    <i class="bi bi-search" aria-hidden="true"></i>
                 </button>
             </div>
         </form>
@@ -30,39 +32,41 @@ SGE - Fornecedores
 
 <div class="table-responsive">
     <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
+        <thead>
             <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th>Ações</th>
+                <th class="num" scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Ações</th>
             </tr>
         </thead>
         <tbody>
             {% for supplier in suppliers %}
             <tr>
-                <td>{{ supplier.id }}</td>
+                <td class="num">{{ supplier.id }}</td>
                 <td>{{ supplier.name }}</td>
                 <td>{{ supplier.description}}</td>
                 <td>
-                    <a href="{% url 'supplier_detail' supplier.id %}" class="btn btn-info btn-sm">
-                        <i class="bi bi-eye"></i>
+                    <a href="{% url 'supplier_detail' supplier.id %}" class="btn btn-info btn-sm" aria-label="Ver detalhes de {{ supplier.name }}">
+                        <i class="bi bi-eye" aria-hidden="true"></i>
                     </a>
 
                     {% if perms.suppliers.change_supplier %}
-                    <a href="{% url 'supplier_update' supplier.id%}" class="btn btn-warning btn-sm">
-                        <i class="bi bi-pencil"></i>
+                    <a href="{% url 'supplier_update' supplier.id%}" class="btn btn-warning btn-sm" aria-label="Editar {{ supplier.name }}">
+                        <i class="bi bi-pencil" aria-hidden="true"></i>
                     </a>
                     {% endif%}
 
                     {% if perms.suppliers.delete_supplier %}
-                    <a href="{% url 'supplier_delete' supplier.id%}" class="btn btn-danger btn-sm">
-                        <i class="bi bi-trash"></i>
+                    <a href="{% url 'supplier_delete' supplier.id%}" class="btn btn-danger btn-sm" aria-label="Excluir {{ supplier.name }}">
+                        <i class="bi bi-trash" aria-hidden="true"></i>
                     </a>
                     {% endif %}
                 </td>
             </tr>
-            {% endfor %}
+            {% empty %}
+            <tr><td colspan="4" class="text-center py-4 text-secondary">Nenhum registro para mostrar.</td></tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>

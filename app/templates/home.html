@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    SGE - HOME
+    SGE - Registro de estoque
 {% endblock %}
 
 {% block content %}
 
+    <h1 class="sge-page-title">Registro de estoque</h1>
+
     {% include 'components/_ai_result.html' %}
-    
-    
 
     {% if perms.products.view_product and perms.inflows.view_inflow%}
       {% include 'components/_product_metrics.html' %}
@@ -23,19 +23,22 @@
 
     {% if perms.outflows.view_outflow %}
     <div class="row mt-4 justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5 class="text-center mb-3">Valor de vendas (Últimos 7 Dias)</h5>
-        <canvas id="dailySalesChart"></canvas>
+      <div class="col-md-6">
+        <h2 class="h6 text-center mb-3">Valor de vendas (últimos 7 dias)</h2>
+        <canvas id="dailySalesChart" role="img" aria-label="Gráfico de linha com o valor de vendas dos últimos 7 dias"></canvas>
       </div>
-      <div class="col-md-6 text-center">
-        <h5 class="text-center mb-3">Quantidade de Vendas Diárias</h5>
-        <canvas id="dailySalesQuantityChart"></canvas>
+      <div class="col-md-6">
+        <h2 class="h6 text-center mb-3">Quantidade de vendas diárias</h2>
+        <canvas id="dailySalesQuantityChart" role="img" aria-label="Gráfico de barras com a quantidade de vendas diárias"></canvas>
       </div>
       <script>
         document.addEventListener("DOMContentLoaded", function() {
           var dailySalesData = JSON.parse('{{ daily_sales_data|safe }}');
           var dailySalesQuantityData = JSON.parse('{{ daily_sales_quantity_data|safe }}');
-    
+
+          var gridColor = 'rgba(28, 38, 33, 0.08)';
+          var ticksColor = '#55605A';
+
           var ctxDailySales = document.getElementById('dailySalesChart').getContext('2d');
           var dailySalesChart = new Chart(ctxDailySales, {
             type: 'line',
@@ -45,7 +48,7 @@
                 label: 'Valor em vendas',
                 data: dailySalesData.values,
                 fill: false,
-                borderColor: 'rgba(54, 162, 235, 1)',
+                borderColor: '#2E6B4F',
                 borderWidth: 2,
                 tension: 0.5
               }]
@@ -53,29 +56,41 @@
             options: {
               scales: {
                 y: {
-                  beginAtZero: true
+                  beginAtZero: true,
+                  grid: { color: gridColor },
+                  ticks: { color: ticksColor }
+                },
+                x: {
+                  grid: { display: false },
+                  ticks: { color: ticksColor }
                 }
               }
             }
           });
-    
+
           var ctxDailySalesQuantity = document.getElementById('dailySalesQuantityChart').getContext('2d');
           var dailySalesQuantityChart = new Chart(ctxDailySalesQuantity, {
             type: 'bar',
             data: {
               labels: dailySalesQuantityData.dates,
               datasets: [{
-                label: 'Quantidade de Vendas',
+                label: 'Quantidade de vendas',
                 data: dailySalesQuantityData.values,
-                backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(28, 38, 33, 0.82)',
+                borderColor: '#1C2621',
                 borderWidth: 1
               }]
             },
             options: {
               scales: {
                 y: {
-                  beginAtZero: true
+                  beginAtZero: true,
+                  grid: { color: gridColor },
+                  ticks: { color: ticksColor }
+                },
+                x: {
+                  grid: { display: false },
+                  ticks: { color: ticksColor }
                 }
               }
             }
@@ -89,27 +104,28 @@
     <div class="row mt-5 justify-content-center">
       <div class="col-md-6 text-center">
         {% if product_count_by_category != '{}' %}
-          <h5 class="mb-3">Produtos por Categoria</h5>
-          <div class="mb-4"></div>
-          <div class="embed-responsive embed-responsive-1by1" style="width: 400px; display: inline-block;">
-            <canvas id="productByCategoryChart" class="embed-responsive-item"></canvas>
+          <h2 class="h6 mb-3">Produtos por categoria</h2>
+          <div style="width: 400px; max-width: 100%; display: inline-block;">
+            <canvas id="productByCategoryChart" role="img" aria-label="Gráfico de rosca com a quantidade de produtos por categoria"></canvas>
           </div>
         {% endif %}
       </div>
       <div class="col-md-6 text-center">
         {% if product_count_by_category != '{}' %}
-          <h5 class="mb-3">Produtos por Marca</h5>
+          <h2 class="h6 mb-3">Produtos por marca</h2>
           <div class="mb-4"></div>
-          <div style="width: 400px; display: inline-block;">
-            <canvas id="productByBrandChart" class="embed-responsive-item"></canvas>
+          <div style="width: 400px; max-width: 100%; display: inline-block;">
+            <canvas id="productByBrandChart" role="img" aria-label="Gráfico de rosca com a quantidade de produtos por marca"></canvas>
           </div>
         {% endif %}
       </div>
       <script>
-        document.addEventListener("DOMContentLoaded", function() {  
+        document.addEventListener("DOMContentLoaded", function() {
           var productCountByCategory = JSON.parse('{{ product_count_by_category|safe }}');
           var productCountByBrand = JSON.parse('{{ product_count_by_brand|safe }}');
-    
+
+          var palette = ['#2E6B4F', '#1C2621', '#9A6A00', '#C4341B', '#55605A', '#AEB9B2'];
+
           var ctxCategory = document.getElementById('productByCategoryChart').getContext('2d');
           var productByCategoryChart = new Chart(ctxCategory, {
             type: 'doughnut',
@@ -117,6 +133,7 @@
               labels: Object.keys(productCountByCategory),
               datasets: [{
                 data: Object.values(productCountByCategory),
+                backgroundColor: palette,
                 borderWidth: 1
               }]
             },
@@ -128,7 +145,7 @@
               }
             }
           });
-    
+
           var ctxBrand = document.getElementById('productByBrandChart').getContext('2d');
           var productByBrandChart = new Chart(ctxBrand, {
             type: 'doughnut',
@@ -136,6 +153,7 @@
               labels: Object.keys(productCountByBrand),
               datasets: [{
                 data: Object.values(productCountByBrand),
+                backgroundColor: palette,
                 borderWidth: 1
               }]
             },

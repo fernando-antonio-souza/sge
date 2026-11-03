@@ -11,16 +11,16 @@ SGE - Saídas
     {% include 'components/_sales_metrics.html' %}
 {% endif %}
 
-<div class="mb-4"></div>
+<h1 class="sge-page-title">Saídas</h1>
 
 <div class="row mb-3">
 
     <div class="col-md-6">
-        <form method="get" action="{% url 'outflow_list' %}">
+        <form method="get" action="{% url 'outflow_list' %}" role="search">
             <div class="input-group">
-                <input type="text" class="form-control" name="product" placeholder="Produto" value="{{ request.GET.name }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i>
+                <input type="text" class="form-control" name="product" placeholder="Ex.: Parafuso…" aria-label="Buscar por produto" value="{{ request.GET.name }}">
+                <button type="submit" class="btn btn-primary" aria-label="Buscar">
+                    <i class="bi bi-search" aria-hidden="true"></i>
                 </button>
             </div>
         </form>
@@ -28,7 +28,7 @@ SGE - Saídas
     {% if perms.outflows.add_outflow %}
         <div class="col-md-6">
             <a href="{% url 'outflow_create' %}" class="btn btn-success float-end">
-                <i class="bi bi-plus"></i> Nova Saída
+                <i class="bi bi-plus" aria-hidden="true"></i> Nova Saída
             </a>
         </div>
     {% endif %}
@@ -37,31 +37,31 @@ SGE - Saídas
 
 <div class="table-responsive">
     <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
+        <thead>
             <tr>
-                <th>ID</th>
-                <th>Produto</th>
-                <th>Fornecedor</th>
-                <th>Quantidade</th>
-                <th>Data de entrada</th>
-                <th>Ações</th>
+                <th class="num" scope="col">ID</th>
+                <th scope="col">Produto</th>
+                <th class="num" scope="col">Quantidade</th>
+                <th class="num" scope="col">Data de saída</th>
+                <th scope="col">Ações</th>
             </tr>
         </thead>
         <tbody>
             {% for outflow in outflows %}
             <tr>
-                <td>{{ outflow.id }}</td>
+                <td class="num">{{ outflow.id }}</td>
                 <td>{{ outflow.product }}</td>
-                <td>{{ outflow.supplier }}</td>
-                <td>{{ outflow.quantity }}</td>
-                <td>{{ outflow.created_at }}</td>
+                <td class="num">{{ outflow.quantity }}</td>
+                <td class="num">{{ outflow.created_at|date:'d/m/Y H:i' }}</td>
                 <td>
-                    <a href="{% url 'outflow_detail' outflow.id %}" class="btn btn-info btn-sm">
-                        <i class="bi bi-eye"></i>
+                    <a href="{% url 'outflow_detail' outflow.id %}" class="btn btn-info btn-sm" aria-label="Ver detalhes da saída {{ outflow.id }}">
+                        <i class="bi bi-eye" aria-hidden="true"></i>
                     </a>
                 </td>
             </tr>
-            {% endfor %}
+            {% empty %}
+            <tr><td colspan="5" class="text-center py-4 text-secondary">Nenhum registro para mostrar.</td></tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
@@ -69,4 +69,3 @@ SGE - Saídas
 {% include 'components/_pagination.html' %}
 
 {% endblock %}
-

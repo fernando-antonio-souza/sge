@@ -11,17 +11,17 @@ SGE - Produtos
     {% include 'components/_product_metrics.html' %}
 {% endif %}
 
-<div class="mb-4"></div>
+<h1 class="sge-page-title">Produtos</h1>
 
 <div class="row mb-3">
 
     <div class="col-md-6">
-        <form method="get" action="{% url 'product_list' %}">
+        <form method="get" action="{% url 'product_list' %}" role="search">
             <div class="input-group">
-                <input type="text" class="form-control" name="title" placeholder="Título" value="{{ request.GET.title }}">
-                <input type="text" class="form-control" name="serie_number" placeholder="Número de Série" value="{{ request.GET.serie_number }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i>
+                <input type="text" class="form-control" name="title" placeholder="Ex.: Parafuso…" aria-label="Buscar por título" value="{{ request.GET.title }}">
+                <input type="text" class="form-control" name="serie_number" placeholder="Ex.: SN-1042…" aria-label="Buscar por número de série" value="{{ request.GET.serie_number }}">
+                <button type="submit" class="btn btn-primary" aria-label="Buscar">
+                    <i class="bi bi-search" aria-hidden="true"></i>
                 </button>
             </div>
         </form>
@@ -29,7 +29,7 @@ SGE - Produtos
     {% if perms.products.add_product %}
         <div class="col-md-6">
             <a href="{% url 'product_create' %}" class="btn btn-success float-end">
-                <i class="bi bi-plus"></i> Novo Produto
+                <i class="bi bi-plus" aria-hidden="true"></i> Novo Produto
             </a>
         </div>
     {% endif %}
@@ -40,7 +40,7 @@ SGE - Produtos
     <div class="col-md-6">
         <form method="get" action="{% url 'product_list' %}">
             <div class="input-group">
-                <select class="form-select" name="category">
+                <select class="form-select" name="category" aria-label="Filtrar por categoria">
                     <option value="" {% if not request.GET.category %} selected {% endif %}>Todas as Categorias</option>
                     {% for category in categories %}
                         <option value="{{ category.id }}" {% if request.GET.category == category.id %} selected {% endif %}>{{ category.name }}</option>
@@ -48,7 +48,7 @@ SGE - Produtos
 
                 </select>
 
-                <select class="form-select" name="brand">
+                <select class="form-select" name="brand" aria-label="Filtrar por marca">
                     <option value="" {% if not request.GET.brand %} selected {% endif %}>Todas as Marcas</option>
                     {% for brand in brands %}
                         <option value="{{ brand.id }}" {% if request.GET.brand == brand.id %} selected {% endif %}>{{ brand.name }}</option>
@@ -57,7 +57,7 @@ SGE - Produtos
                 </select>
 
                 <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-filter"></i> Filtrar
+                    <i class="bi bi-filter" aria-hidden="true"></i> Filtrar
                 </button>
 
             </div>
@@ -67,49 +67,51 @@ SGE - Produtos
 
 <div class="table-responsive">
     <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
+        <thead>
             <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Categoria</th>
-                <th>Marca</th>
-                <th>Preço de Custo</th>
-                <th>Preço de Venda</th>
-                <th>Numero de Série</th>
-                <th>Quantidade</th>
-                <th>Ações</th>
+                <th class="num" scope="col">ID</th>
+                <th scope="col">Título</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Marca</th>
+                <th class="num" scope="col">Preço de Custo</th>
+                <th class="num" scope="col">Preço de Venda</th>
+                <th scope="col">Número de Série</th>
+                <th class="num" scope="col">Quantidade</th>
+                <th scope="col">Ações</th>
             </tr>
         </thead>
         <tbody>
             {% for product in products %}
             <tr>
-                <td>{{ product.id }}</td>
+                <td class="num">{{ product.id }}</td>
                 <td>{{ product.title }}</td>
                 <td>{{ product.category }}</td>
                 <td>{{ product.brand }}</td>
-                <td>R$ {{ product.cost_price }}</td>
-                <td>R$ {{ product.selling_price }}</td>
+                <td class="num">R$ {{ product.cost_price }}</td>
+                <td class="num">R$ {{ product.selling_price }}</td>
                 <td>{{ product.serie_number }}</td>
-                <td>{{ product.quantity }}</td>
+                <td class="num">{{ product.quantity }}</td>
                 <td>
-                    <a href="{% url 'product_detail' product.id %}" class="btn btn-info btn-sm">
-                        <i class="bi bi-eye"></i>
+                    <a href="{% url 'product_detail' product.id %}" class="btn btn-info btn-sm" aria-label="Ver detalhes de {{ product.title }}">
+                        <i class="bi bi-eye" aria-hidden="true"></i>
                     </a>
 
                     {% if perms.products.change_product %}
-                    <a href="{% url 'product_update' product.id %}" class="btn btn-warning btn-sm">
-                        <i class="bi bi-pencil"></i>
+                    <a href="{% url 'product_update' product.id %}" class="btn btn-warning btn-sm" aria-label="Editar {{ product.title }}">
+                        <i class="bi bi-pencil" aria-hidden="true"></i>
                     </a>
                     {% endif %}
-                    
+
                     {% if perms.products.delete_product %}
-                    <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm">
-                        <i class="bi bi-trash"></i>
+                    <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm" aria-label="Excluir {{ product.title }}">
+                        <i class="bi bi-trash" aria-hidden="true"></i>
                     </a>
                     {% endif %}
                 </td>
             </tr>
-            {% endfor %}
+            {% empty %}
+            <tr><td colspan="9" class="text-center py-4 text-secondary">Nenhum registro para mostrar.</td></tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
@@ -117,4 +119,3 @@ SGE - Produtos
 {% include 'components/_pagination.html' %}
 
 {% endblock %}
-

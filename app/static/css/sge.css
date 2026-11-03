@@ -1,0 +1,557 @@
+/* ============================================================
+   SGE — tema "livro de registro de estoque"
+   Papel de formulário, tinta, e cor que significa:
+   verde = entrada/conferido · vermelho = saída/fiscal
+   ============================================================ */
+
+:root {
+  /* tokens do sistema */
+  color-scheme: light;
+  --sge-paper: #F2F4F3;
+  --sge-paper-raised: #FBFCFB;
+  --sge-ink: #1C2621;
+  --sge-ink-soft: #55605A;
+  --sge-line: #D4DBD6;
+  --sge-line-strong: #AEB9B2;
+  --sge-in: #2E6B4F;
+  --sge-in-soft: #E3EFE8;
+  --sge-out: #C4341B;
+  --sge-out-soft: #F9E9E4;
+  --sge-amber: #9A6A00;
+  --sge-amber-soft: #F7EFDD;
+  --sge-radius: 6px;
+
+  /* mapeando para o Bootstrap 5.3 */
+  --bs-body-bg: var(--sge-paper);
+  --bs-body-color: var(--sge-ink);
+  --bs-body-font-family: "Archivo", system-ui, -apple-system, sans-serif;
+  --bs-body-font-size: 0.9375rem;
+  --bs-body-line-height: 1.55;
+  --bs-border-color: var(--sge-line);
+  --bs-link-color: var(--sge-in);
+  --bs-link-hover-color: #21503B;
+  --bs-emphasis-color: var(--sge-ink);
+}
+
+/* ---------- base ---------- */
+
+body {
+  font-feature-settings: "tnum" 1;
+  -webkit-tap-highlight-color: rgba(28, 38, 33, 0.08);
+}
+
+/* drawer lateral: rolagem contida, toque sem atraso */
+.sge-sidebar.offcanvas-md {
+  overscroll-behavior: contain;
+  touch-action: manipulation;
+}
+
+.btn,
+.sge-nav .nav-link,
+.sge-nav .sge-nav-exit .btn-link {
+  touch-action: manipulation;
+}
+
+::selection {
+  background: var(--sge-in-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--sge-in);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- shell: sidebar + documento ---------- */
+
+.sge-shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+.sge-sidebar {
+  width: 232px;
+  flex-shrink: 0;
+  background: var(--sge-ink);
+  color: var(--sge-paper);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+/* quando vira offcanvas no mobile, o Bootstrap assume o layout */
+@media (min-width: 768px) {
+  .sge-sidebar.offcanvas-md.showing,
+  .sge-sidebar.offcanvas-md.show:not(.hiding) {
+    transform: none;
+    position: sticky;
+    width: 232px;
+  }
+}
+
+.sge-brand {
+  display: block;
+  padding: 1.25rem 1.25rem 1rem;
+  color: var(--sge-paper);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(242, 244, 243, 0.14);
+}
+
+.sge-brand .sge-brand-mark {
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: 1.375rem;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.sge-brand .sge-brand-sub {
+  display: block;
+  margin-top: 0.375rem;
+  font-size: 0.6875rem;
+  color: rgba(242, 244, 243, 0.62);
+  line-height: 1.35;
+}
+
+.sge-nav {
+  padding: 0.75rem 0.75rem;
+  overflow-y: auto;
+}
+
+.sge-nav .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5625rem 0.75rem;
+  border-radius: var(--sge-radius);
+  color: rgba(242, 244, 243, 0.78);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  border-left: 3px solid transparent;
+}
+
+.sge-nav .nav-link .bi {
+  font-size: 1.0625rem;
+  flex-shrink: 0;
+}
+
+.sge-nav .nav-link:hover {
+  color: var(--sge-paper);
+  background: rgba(242, 244, 243, 0.08);
+}
+
+/* página atual: barra "conferido" à esquerda */
+.sge-nav .nav-link[aria-current="page"] {
+  color: var(--sge-paper);
+  background: rgba(242, 244, 243, 0.10);
+  border-left-color: var(--sge-in);
+}
+
+.sge-nav .sge-nav-exit {
+  margin-top: auto;
+  border-top: 1px solid rgba(242, 244, 243, 0.14);
+  padding-top: 0.75rem;
+}
+
+.sge-nav .sge-nav-exit .btn-link {
+  color: rgba(242, 244, 243, 0.78);
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5625rem 0.75rem;
+  border-radius: var(--sge-radius);
+  width: 100%;
+}
+
+.sge-nav .sge-nav-exit .btn-link:hover {
+  color: var(--sge-paper);
+  background: rgba(242, 244, 243, 0.08);
+}
+
+/* ---------- topbar: linha de carimbo do documento ---------- */
+
+.sge-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sge-topbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1.5rem;
+  border-bottom: 1px solid var(--sge-line);
+  background: var(--sge-paper-raised);
+  font-size: 0.8125rem;
+  color: var(--sge-ink-soft);
+}
+
+.sge-topbar .sge-topbar-date {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8125rem;
+}
+
+.sge-topbar .sge-topbar-user {
+  margin-left: auto;
+  color: var(--sge-ink);
+  font-weight: 500;
+}
+
+.sge-content {
+  padding: 1.75rem 1.5rem 2.5rem;
+  width: 100%;
+  max-width: 1140px;
+}
+
+.sge-footer {
+  margin-top: auto;
+  padding: 0.75rem 1.5rem;
+  border-top: 1px solid var(--sge-line);
+  font-size: 0.8125rem;
+  color: var(--sge-ink-soft);
+}
+
+/* título de página: o número/documento é o herói */
+.sge-page-title {
+  font-weight: 700;
+  font-stretch: 112%;
+  font-size: 1.375rem;
+  letter-spacing: 0.01em;
+  margin: 0 0 1.25rem;
+  text-wrap: balance;
+}
+
+/* ---------- faixa de registro (métricas) ---------- */
+
+.sge-ledger {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  background: var(--sge-paper-raised);
+  border: 1px solid var(--sge-line);
+  border-radius: var(--sge-radius);
+  overflow: hidden;
+  margin: 0 0 1.5rem;
+}
+
+.sge-ledger-col {
+  padding: 1rem 1.25rem;
+  border-left: 1px solid var(--sge-line);
+  min-width: 0;
+}
+
+.sge-ledger-col:first-child {
+  border-left: none;
+}
+
+.sge-ledger-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--sge-ink-soft);
+  margin-bottom: 0.25rem;
+}
+
+.sge-ledger-value {
+  display: block;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 500;
+  font-size: 1.375rem;
+  line-height: 1.2;
+  color: var(--sge-ink);
+  overflow-wrap: anywhere;
+}
+
+/* cor semântica: só onde o dado é positivo/entradas */
+.sge-ledger-value.is-in {
+  color: var(--sge-in);
+}
+
+/* ---------- tabelas de registro ---------- */
+
+.table {
+  --bs-table-bg: var(--sge-paper-raised);
+  --bs-table-striped-bg: #F5F8F6;
+  --bs-table-striped-color: var(--sge-ink);
+  --bs-table-hover-bg: var(--sge-in-soft);
+  --bs-table-hover-color: var(--sge-ink);
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.table thead th {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--sge-ink-soft);
+  border-bottom: 2px solid var(--sge-ink);
+  white-space: nowrap;
+}
+
+.table td {
+  border-color: var(--sge-line);
+  vertical-align: middle;
+}
+
+/* colunas numéricas: moeda e contagem alinhadas à direita */
+.table th.num,
+.table td.num {
+  text-align: right;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.85rem;
+}
+
+/* ---------- botões: remapeados pelo significado ---------- */
+
+.btn {
+  --bs-btn-border-radius: var(--sge-radius);
+  --bs-btn-font-weight: 500;
+  font-family: inherit;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--sge-ink);
+  --bs-btn-border-color: var(--sge-ink);
+  --bs-btn-hover-bg: #2C3A33;
+  --bs-btn-hover-border-color: #2C3A33;
+  --bs-btn-active-bg: #2C3A33;
+  --bs-btn-active-border-color: #2C3A33;
+  --bs-btn-disabled-bg: var(--sge-ink);
+  --bs-btn-disabled-border-color: var(--sge-ink);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--sge-in);
+  --bs-btn-border-color: var(--sge-in);
+  --bs-btn-hover-bg: #25583F;
+  --bs-btn-hover-border-color: #25583F;
+  --bs-btn-active-bg: #25583F;
+  --bs-btn-active-border-color: #25583F;
+  --bs-btn-disabled-bg: var(--sge-in);
+  --bs-btn-disabled-border-color: var(--sge-in);
+}
+
+.btn-danger {
+  --bs-btn-bg: var(--sge-out);
+  --bs-btn-border-color: var(--sge-out);
+  --bs-btn-hover-bg: #A72A15;
+  --bs-btn-hover-border-color: #A72A15;
+  --bs-btn-active-bg: #A72A15;
+  --bs-btn-active-border-color: #A72A15;
+  --bs-btn-disabled-bg: var(--sge-out);
+  --bs-btn-disabled-border-color: var(--sge-out);
+}
+
+.btn-warning {
+  --bs-btn-color: #FFFFFF;
+  --bs-btn-bg: var(--sge-amber);
+  --bs-btn-border-color: var(--sge-amber);
+  --bs-btn-hover-color: #FFFFFF;
+  --bs-btn-hover-bg: #7E5700;
+  --bs-btn-hover-border-color: #7E5700;
+  --bs-btn-active-color: #FFFFFF;
+  --bs-btn-active-bg: #7E5700;
+  --bs-btn-active-border-color: #7E5700;
+  --bs-btn-disabled-color: #FFFFFF;
+  --bs-btn-disabled-bg: var(--sge-amber);
+  --bs-btn-disabled-border-color: var(--sge-amber);
+}
+
+/* ação de consulta: botão fantasma neutro */
+.btn-info {
+  --bs-btn-color: var(--sge-ink);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--sge-line-strong);
+  --bs-btn-hover-color: var(--sge-ink);
+  --bs-btn-hover-bg: var(--sge-paper);
+  --bs-btn-hover-border-color: var(--sge-ink-soft);
+  --bs-btn-active-color: var(--sge-ink);
+  --bs-btn-active-bg: var(--sge-line);
+  --bs-btn-active-border-color: var(--sge-ink-soft);
+  --bs-btn-disabled-color: var(--sge-ink-soft);
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: var(--sge-line);
+}
+
+/* ---------- formulários ---------- */
+
+.form-control,
+.form-select {
+  --bs-border-radius: var(--sge-radius);
+  border-color: var(--sge-line-strong);
+  background-color: var(--sge-paper-raised);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--sge-in);
+  box-shadow: 0 0 0 0.1875rem rgba(46, 107, 79, 0.18);
+}
+
+.form-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--sge-ink);
+}
+
+.input-group-text {
+  border-color: var(--sge-line-strong);
+  background-color: var(--sge-paper);
+}
+
+/* ---------- cards (detail/delete usam) ---------- */
+
+.card {
+  --bs-card-border-radius: var(--sge-radius);
+  --bs-card-border-color: var(--sge-line);
+  --bs-card-bg: var(--sge-paper-raised);
+  --bs-card-cap-bg: var(--sge-paper);
+  --bs-card-title-spacer-y: 0.875rem;
+}
+
+/* ---------- paginação ---------- */
+
+.pagination {
+  --bs-pagination-border-radius: var(--sge-radius);
+  --bs-pagination-color: var(--sge-ink);
+  --bs-pagination-border-color: var(--sge-line-strong);
+  --bs-pagination-bg: var(--sge-paper-raised);
+  --bs-pagination-hover-color: var(--sge-ink);
+  --bs-pagination-hover-bg: var(--sge-in-soft);
+  --bs-pagination-hover-border-color: var(--sge-in);
+  --bs-pagination-active-bg: var(--sge-ink);
+  --bs-pagination-active-border-color: var(--sge-ink);
+  --bs-pagination-focus-color: var(--sge-in);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.1875rem rgba(46, 107, 79, 0.18);
+}
+
+/* ---------- alertas e accordion ---------- */
+
+.alert-danger {
+  --bs-alert-color: var(--sge-out);
+  --bs-alert-bg: var(--sge-out-soft);
+  --bs-alert-border-color: #ECC5BB;
+}
+
+.alert-success {
+  --bs-alert-color: var(--sge-in);
+  --bs-alert-bg: var(--sge-in-soft);
+  --bs-alert-border-color: #C2DCCB;
+}
+
+.accordion {
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.1875rem rgba(46, 107, 79, 0.18);
+  --bs-accordion-active-color: var(--sge-in);
+  --bs-accordion-border-color: var(--sge-line);
+  --bs-accordion-btn-padding-x: 1rem;
+}
+
+/* ---------- login: painel de tinta + formulário em papel ---------- */
+
+.sge-login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 992px) {
+  .sge-login {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+.sge-login-panel {
+  background: var(--sge-ink);
+  color: var(--sge-paper);
+  padding: 2.5rem;
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .sge-login-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.sge-login-panel .sge-login-mark {
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.sge-login-panel .sge-login-tag {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: rgba(242, 244, 243, 0.72);
+  max-width: 26ch;
+}
+
+.sge-login-panel .sge-login-stamp {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8125rem;
+  color: rgba(242, 244, 243, 0.55);
+  border-top: 1px solid rgba(242, 244, 243, 0.18);
+  padding-top: 1rem;
+}
+
+.sge-login-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background: var(--sge-paper);
+}
+
+.sge-login-form form {
+  width: 100%;
+  max-width: 380px;
+}
+
+.sge-login-form .sge-login-title {
+  font-weight: 700;
+  font-stretch: 112%;
+  font-size: 1.375rem;
+  margin: 0 0 0.375rem;
+}
+
+.sge-login-form .sge-login-sub {
+  color: var(--sge-ink-soft);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* marca pequena visível só no mobile, onde o painel não aparece */
+.sge-login-brand-mobile {
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 992px) {
+  .sge-login-brand-mobile {
+    display: none;
+  }
+}
+
+/* ---------- utilitários ---------- */
+
+.bi {
+  vertical-align: -0.125em;
+}

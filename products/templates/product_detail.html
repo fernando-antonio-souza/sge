@@ -2,8 +2,8 @@
 
 {% block content %}
 
-<div class="container mt-4">
-    <h3 class="display-6">Detalhes do Produto</h3>
+<div>
+    <h1 class="sge-page-title">Detalhes do Produto</h1>
 
     <div class="card">
         <div class="card-body">
@@ -17,7 +17,7 @@
         <p class="card-text">Quantidade em Estoque: <strong>{{ object.quantity }}</strong></p>
         </div>
     </div>
-    <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">Voltar para a Lista de Marcas</a>
+    <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">Voltar para a Lista de Produtos</a>
 </div>
 
 {% endblock %}

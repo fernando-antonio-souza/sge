@@ -1,5 +1,12 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand text-white" href="#">Sistema de Gestão de Estoque (SGE)</a>
-  </div>
-</nav>
+<header class="sge-topbar">
+  <button class="btn btn-outline-secondary btn-sm d-md-none" type="button"
+    data-bs-toggle="offcanvas" data-bs-target="#sgeSidebar" aria-controls="sgeSidebar" aria-label="Abrir menu">
+    <i class="bi bi-list" aria-hidden="true"></i>
+  </button>
+
+  <span class="d-md-none fw-bold">SGE</span>
+
+  <span class="sge-topbar-date" aria-label="Data de hoje">{% now 'd/m/Y' %}</span>
+
+  <span class="sge-topbar-user">{{ user.username }}</span>
+</header>
