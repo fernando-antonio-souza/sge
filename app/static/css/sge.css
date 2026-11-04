@@ -77,25 +77,36 @@ body {
   display: flex;
 }
 
+/* mobile: o offcanvas do Bootstrap controla posição/visibilidade;
+   largura, fundo de tinta e padding zero são nossos (o .offcanvas-md
+   do Bootstrap 5.3 não define width — sem isso o drawer encolhe
+   por shrink-to-fit) */
 .sge-sidebar {
-  width: 232px;
-  flex-shrink: 0;
-  background: var(--sge-ink);
-  color: var(--sge-paper);
-  display: flex;
-  flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  --bs-offcanvas-bg: var(--sge-ink);
+  --bs-offcanvas-color: var(--sge-paper);
+  --bs-offcanvas-padding-x: 0;
+  --bs-offcanvas-padding-y: 0;
 }
 
-/* quando vira offcanvas no mobile, o Bootstrap assume o layout */
-@media (min-width: 768px) {
-  .sge-sidebar.offcanvas-md.showing,
-  .sge-sidebar.offcanvas-md.show:not(.hiding) {
-    transform: none;
-    position: sticky;
+@media (max-width: 767.98px) {
+  .sge-sidebar.offcanvas-md {
     width: 232px;
+  }
+}
+
+/* desktop: coluna fixa de tinta — dentro da media query para não
+   sobrescrever o .offcanvas-md abaixo de 768px */
+@media (min-width: 768px) {
+  .sge-sidebar {
+    width: 232px;
+    flex-shrink: 0;
+    background: var(--sge-ink);
+    color: var(--sge-paper);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
   }
 }
 
@@ -209,6 +220,19 @@ body {
   margin-left: auto;
   color: var(--sge-ink);
   font-weight: 500;
+}
+
+@media (max-width: 767.98px) {
+  .sge-topbar {
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .sge-topbar .sge-topbar-date,
+  .sge-topbar .sge-topbar-user {
+    white-space: nowrap;
+    font-size: 0.75rem;
+  }
 }
 
 .sge-content {
@@ -409,6 +433,60 @@ body {
 .input-group-text {
   border-color: var(--sge-line-strong);
   background-color: var(--sge-paper);
+}
+
+/* formulários Django renderizados com form.as_p (sem classes Bootstrap) */
+.sge-content form p {
+  margin-bottom: 1rem;
+}
+
+.sge-content form p > label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--sge-ink);
+}
+
+.sge-content form p > input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
+.sge-content form p > select,
+.sge-content form p > textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.4375rem 0.75rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  line-height: 1.5;
+  color: var(--sge-ink);
+  background-color: var(--sge-paper-raised);
+  border: 1px solid var(--sge-line-strong);
+  border-radius: var(--sge-radius);
+}
+
+.sge-content form p > select {
+  appearance: auto;
+}
+
+.sge-content form p > textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.sge-content form p > input:focus,
+.sge-content form p > select:focus,
+.sge-content form p > textarea:focus {
+  outline: 2px solid var(--sge-in);
+  outline-offset: 0;
+  border-color: var(--sge-in);
+}
+
+/* erros de validação do Django nos formulários as_p */
+.sge-content form p > ul.errorlist {
+  margin: 0.375rem 0 0;
+  padding-left: 1.125rem;
+  font-size: 0.8125rem;
+  color: var(--sge-out);
 }
 
 /* ---------- cards (detail/delete usam) ---------- */
