@@ -1,15 +1,29 @@
-<div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-        aria-expanded="false" aria-controls="collapseTwo">
-        SGE Agent
-      </button>
-    </h2>
-    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        {{ ai_result|linebreaks }}
-      </div>
-    </div>
+{% comment %}
+Parecer automático do SGE Agent, anexo ao registro de estoque.
+Usa <details>/<summary> nativos: estado, teclado e leitores de tela
+sem JS. Não renderiza nada sem parecer (empty state).
+{% endcomment %}
+
+{% if ai_result %}
+<details class="sge-agent">
+  <summary class="sge-agent-summary">
+    <span class="sge-agent-head">
+      <i class="bi bi-cpu" aria-hidden="true"></i>
+      <span class="sge-agent-names">
+        <span class="sge-agent-name">SGE Agent</span>
+        <span class="sge-agent-sub">Parecer automático sobre o estoque</span>
+      </span>
+    </span>
+    <span class="sge-agent-meta">
+      {% if ai_result_date %}
+        <span class="sge-agent-date">parecer de {{ ai_result_date|date:'d/m/Y H:i' }}</span>
+      {% endif %}
+      <i class="bi bi-chevron-down sge-agent-chevron" aria-hidden="true"></i>
+    </span>
+  </summary>
+
+  <div class="sge-agent-body" {% if ai_result_date %}data-when="{{ ai_result_date|date:'d/m/Y H:i' }}"{% endif %}>
+    {{ ai_result|linebreaks }}
   </div>
-</div>
+</details>
+{% endif %}

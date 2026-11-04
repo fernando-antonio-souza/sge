@@ -13,8 +13,7 @@ def home(request):
     daily_sales_quantity_data = metrics.get_daily_sales_quantity_data()
     graphic_product_category_metric = metrics.get_graphic_product_category_metric()
     graphic_product_brand_metric = metrics.get_graphic_product_brand_metric()
-    ai_result = AIResult.objects.first()
-    ai_result = ai_result.result if ai_result else ""
+    ai_doc = AIResult.objects.first()
 
     context = {
         "product_metrics": product_metrics,
@@ -23,6 +22,7 @@ def home(request):
         "daily_sales_quantity_data": json.dumps(daily_sales_quantity_data),
         "product_count_by_category": json.dumps(graphic_product_category_metric),
         "product_count_by_brand": json.dumps(graphic_product_brand_metric),
-        "ai_result": ai_result,
+        "ai_result": ai_doc.result if ai_doc else "",
+        "ai_result_date": ai_doc.created_at if ai_doc else None,
     }
     return render(request, "home.html", context)
