@@ -242,6 +242,7 @@ body {
   padding: 1.75rem 1.5rem 2.5rem;
   width: 100%;
   max-width: 1140px;
+  margin-inline: auto;
 }
 
 .sge-footer {
@@ -634,11 +635,12 @@ body {
 /* ---------- parecer do agente (card do SGE Agent) ---------- */
 
 .sge-agent-card {
-  background: var(--sge-paper-raised);
+  background: #FFFFFF;
   border: 1px solid var(--sge-line);
   border-radius: var(--sge-radius);
   margin-bottom: 1.5rem;
   overflow: hidden;
+  box-shadow: 0 1px 2px rgba(28, 38, 33, 0.06);
 }
 
 .sge-agent-card-header {
@@ -646,7 +648,23 @@ body {
   align-items: center;
   gap: 0.75rem;
   padding: 0.6875rem 1rem;
+  cursor: pointer;
+  list-style: none;
   border-bottom: 1px solid var(--sge-line);
+}
+
+.sge-agent-card-header::-webkit-details-marker {
+  display: none;
+}
+
+/* redundância de robustez: alguns Chromium não ocultam o corpo de um
+   details fechado quando o CSS dele seta display/block — forçamos o
+   estado fechado nós mesmos (comportamento igual ao nativo) */
+.sge-agent-card:not([open]) > .sge-agent-body {
+  display: none;
+}
+
+.sge-agent-card-header:hover {
   background: var(--sge-paper);
 }
 
@@ -687,6 +705,33 @@ body {
   color: var(--sge-ink-soft);
 }
 
+.sge-agent-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.sge-agent-toggle-label::before {
+  content: "Mostrar";
+  font-weight: 500;
+  font-size: 0.8125rem;
+  color: var(--sge-ink);
+}
+
+.sge-agent-card[open] .sge-agent-toggle-label::before {
+  content: "Ocultar";
+}
+
+.sge-agent-chevron {
+  color: var(--sge-ink-soft);
+  transition: transform 0.2s;
+}
+
+.sge-agent-card[open] .sge-agent-chevron {
+  transform: rotate(-180deg);
+}
+
 @media (max-width: 575.98px) {
   /* data cai para a linha de baixo, alinhada com os nomes */
   .sge-agent-card-header {
@@ -696,6 +741,10 @@ body {
   .sge-agent-date {
     flex-basis: 100%;
     margin-left: 3rem;
+  }
+
+  .sge-agent-toggle-label {
+    display: none;
   }
 }
 

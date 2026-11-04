@@ -1,12 +1,14 @@
 {% load ai_extras %}
 {% comment %}
-Parecer do SGE Agent: card com robô, análise renderizada em Markdown.
+Parecer do SGE Agent: card branco com robô e análise em Markdown.
+O <details>/<summary> nativo dá a opção de ocultar/mostrar a análise,
+com estado, teclado e leitores de tela sem JavaScript.
 Sem parecer no banco, o card nem renderiza (empty state).
 {% endcomment %}
 
 {% if ai_result %}
-<div class="sge-agent-card">
-  <header class="sge-agent-card-header">
+<details class="sge-agent-card" open>
+  <summary class="sge-agent-card-header">
     <span class="sge-agent-avatar" aria-hidden="true">
       <i class="bi bi-robot"></i>
     </span>
@@ -17,10 +19,14 @@ Sem parecer no banco, o card nem renderiza (empty state).
     {% if ai_result_date %}
       <span class="sge-agent-date">parecer de {{ ai_result_date|date:'d/m/Y H:i' }}</span>
     {% endif %}
-  </header>
+    <span class="sge-agent-toggle">
+      <span class="sge-agent-toggle-label"></span>
+      <i class="bi bi-chevron-down sge-agent-chevron" aria-hidden="true"></i>
+    </span>
+  </summary>
 
   <div class="sge-agent-body">
     {{ ai_result|markdown }}
   </div>
-</div>
+</details>
 {% endif %}
