@@ -94,15 +94,15 @@ body {
   }
 }
 
-/* desktop: coluna fixa de tinta — dentro da media query para não
-   sobrescrever o .offcanvas-md abaixo de 768px */
+/* desktop: coluna fixa de tinta — nav sem classes offcanvas, então nada
+   do Bootstrap interfere; a largura/posição ficam aqui (o d-md-flex
+   garante display:flex) */
 @media (min-width: 768px) {
   .sge-sidebar {
     width: 232px;
     flex-shrink: 0;
     background: var(--sge-ink);
     color: var(--sge-paper);
-    display: flex;
     flex-direction: column;
     position: sticky;
     top: 0;
@@ -135,6 +135,9 @@ body {
 }
 
 .sge-nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
   padding: 0.75rem 0.75rem;
   overflow-y: auto;
 }

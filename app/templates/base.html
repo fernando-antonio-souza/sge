@@ -26,9 +26,22 @@
   {% if user.is_authenticated %}
     <div class="sge-shell">
 
-      <aside class="sge-sidebar offcanvas-md" tabindex="-1" id="sgeSidebar" aria-label="Menu principal">
+      {% comment %}
+        Sidebar responsiva no padrão Bootstrap: o mesmo partial em dois
+        elementos — coluna de tinta só no desktop (d-none d-md-flex) e
+        drawer offcanvas só no mobile (offcanvas-md d-md-none). Separar os
+        elementos evita o background-color:transparent !important que o
+        Bootstrap força no .offcanvas-md acima de 768px, que apagava o fundo
+        tinta e tornava o menu invisível no desktop.
+      {% endcomment %}
+
+      <nav class="sge-sidebar d-none d-md-flex" aria-label="Menu principal">
         {% include 'components/_sidebar.html' %}
-      </aside>
+      </nav>
+
+      <div class="sge-sidebar offcanvas-md d-md-none" tabindex="-1" id="sgeSidebar" aria-label="Menu principal">
+        {% include 'components/_sidebar.html' %}
+      </div>
 
       <div class="sge-main">
         {% include 'components/_header.html' %}
