@@ -1,29 +1,26 @@
+{% load ai_extras %}
 {% comment %}
-Parecer automático do SGE Agent, anexo ao registro de estoque.
-Usa <details>/<summary> nativos: estado, teclado e leitores de tela
-sem JS. Não renderiza nada sem parecer (empty state).
+Parecer do SGE Agent: card com robô, análise renderizada em Markdown.
+Sem parecer no banco, o card nem renderiza (empty state).
 {% endcomment %}
 
 {% if ai_result %}
-<details class="sge-agent">
-  <summary class="sge-agent-summary">
-    <span class="sge-agent-head">
-      <i class="bi bi-cpu" aria-hidden="true"></i>
-      <span class="sge-agent-names">
-        <span class="sge-agent-name">SGE Agent</span>
-        <span class="sge-agent-sub">Parecer automático sobre o estoque</span>
-      </span>
+<div class="sge-agent-card">
+  <header class="sge-agent-card-header">
+    <span class="sge-agent-avatar" aria-hidden="true">
+      <i class="bi bi-robot"></i>
     </span>
-    <span class="sge-agent-meta">
-      {% if ai_result_date %}
-        <span class="sge-agent-date">parecer de {{ ai_result_date|date:'d/m/Y H:i' }}</span>
-      {% endif %}
-      <i class="bi bi-chevron-down sge-agent-chevron" aria-hidden="true"></i>
+    <span class="sge-agent-names">
+      <span class="sge-agent-name">SGE Agent</span>
+      <span class="sge-agent-sub">Parecer automático sobre o estoque</span>
     </span>
-  </summary>
+    {% if ai_result_date %}
+      <span class="sge-agent-date">parecer de {{ ai_result_date|date:'d/m/Y H:i' }}</span>
+    {% endif %}
+  </header>
 
-  <div class="sge-agent-body" {% if ai_result_date %}data-when="{{ ai_result_date|date:'d/m/Y H:i' }}"{% endif %}>
-    {{ ai_result|linebreaks }}
+  <div class="sge-agent-body">
+    {{ ai_result|markdown }}
   </div>
-</details>
+</div>
 {% endif %}
