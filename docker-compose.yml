@@ -5,6 +5,12 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      - USE_POSTGRES=1
+      - POSTGRES_DB=sge
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=sge_db
     ports:
       - 8000:8000
     depends_on:
