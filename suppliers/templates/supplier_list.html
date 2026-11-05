@@ -14,7 +14,7 @@ SGE - Fornecedores
     <div class="col-md-6">
         <form method="get" action="{% url 'supplier_list' %}" role="search">
             <div class="input-group">
-                <input type="text" class="form-control" name="name" placeholder="Ex.: Acme…" aria-label="Buscar por nome" value="{{ request.GET.name }}">
+                <input type="text" class="form-control" name="name" placeholder="…" aria-label="Buscar por nome" value="{{ request.GET.name }}">
                 <button type="submit" class="btn btn-primary" aria-label="Buscar">
                     <i class="bi bi-search" aria-hidden="true"></i>
                 </button>

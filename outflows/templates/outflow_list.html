@@ -18,7 +18,7 @@ SGE - Saídas
     <div class="col-md-6">
         <form method="get" action="{% url 'outflow_list' %}" role="search">
             <div class="input-group">
-                <input type="text" class="form-control" name="product" placeholder="Ex.: Parafuso…" aria-label="Buscar por produto" value="{{ request.GET.name }}">
+                <input type="text" class="form-control" name="product" placeholder="…" aria-label="Buscar por produto" value="{{ request.GET.name }}">
                 <button type="submit" class="btn btn-primary" aria-label="Buscar">
                     <i class="bi bi-search" aria-hidden="true"></i>
                 </button>

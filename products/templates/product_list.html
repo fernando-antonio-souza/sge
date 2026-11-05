@@ -18,8 +18,8 @@ SGE - Produtos
     <div class="col-md-6">
         <form method="get" action="{% url 'product_list' %}" role="search">
             <div class="input-group">
-                <input type="text" class="form-control" name="title" placeholder="Ex.: Parafuso…" aria-label="Buscar por título" value="{{ request.GET.title }}">
-                <input type="text" class="form-control" name="serie_number" placeholder="Ex.: SN-1042…" aria-label="Buscar por número de série" value="{{ request.GET.serie_number }}">
+                <input type="text" class="form-control" name="title" placeholder="…" aria-label="Buscar por título" value="{{ request.GET.title }}">
+                <input type="text" class="form-control" name="serie_number" placeholder="…" aria-label="Buscar por número de série" value="{{ request.GET.serie_number }}">
                 <button type="submit" class="btn btn-primary" aria-label="Buscar">
                     <i class="bi bi-search" aria-hidden="true"></i>
                 </button>
