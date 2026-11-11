@@ -15,7 +15,7 @@ class CategoryListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = models.Category
     template_name = "category_list.html"
     context_object_name = "categories"
-    paginate_by = 1
+    paginate_by = 10
     permission_required = "categories.view_category"
 
     def get_queryset(self):
